@@ -26,9 +26,9 @@ int main(){
         }
         //main algorithm
         for(int i = 0; i < rows; i++){
-            for(int j = i + 1; j < cols; j++){
+            for(int j = i + 1; j < rows; j++){
                 var = A[j][i] / A[i][i];
-                for(int k = 0; k < cols + 1; k++){
+                for(int k = 0; k < rows + 1; k++){
                     A[j][k] = A[j][k] - var * A[i][k];
                 }
             }
