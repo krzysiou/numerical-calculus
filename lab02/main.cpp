@@ -83,7 +83,7 @@ int main(){
     for(int i = 0; i < size; i++){
       Z[i] = Y[i];
       for(int j = 0; j < i; j++){
-          Z[i] -= L[i][j] * Y[j];
+          Z[i] -= L[i][j] * Z[j];
       }
     }
 
@@ -92,17 +92,16 @@ int main(){
 
     //print Y
     for(int i = 0; i < size; i++){
-      cout << Y[i] << "  ";
+      cout << Z[i] << "  ";
     }
     cout << endl;
 
     //calculate new C
     for(int i = size - 1; i >= 0; i--) {
-        C_results[i] = Z[i];
+        C_results[i] = Z[i] / U[i][i];
         for (int j = size - 1; j > i; j--) {
-            C_results[i] += U[i][j] * Z[j];
+            C_results[i] -= (U[i][j] * C_results[j]) / U[i][i];
         }
-        C_results[i] /= U[i][i];
     }
 
     //spacer
