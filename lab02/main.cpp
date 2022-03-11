@@ -105,7 +105,7 @@ int main(){
     }
 
     //spacer
-    cout << endl << "====  C ====" << endl << endl;
+    cout << endl << "====  C  ====" << endl << endl;
 
     //print C_results
     for(int i = 0; i < size; i++){
