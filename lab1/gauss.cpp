@@ -4,76 +4,74 @@
 using namespace std;
 
 int main(){
+    //main variables
     int size = 5;
-    float X[5];
-    float B[5] = {10, 2, 9, 9, 3};
-    float var;
-    float sum;
-    float deviation;
 
-    //Gaussian elimination
-    float q = 0.2;
-    
-    float A[5][6] ={
-        {2*q*pow(10,-4), 1, 6,  9, 10},
-        {2*pow(10, -4),  1, 6,  9, 10},
-        {1,              6, 6,  8, 6},
-        {5,              9, 10, 7, 10},
-        {3,              4, 9,  7, 9,}
-    };
+    for(float q = 0.2; q < 5; q += 0.15){
+        //reset values
+        float var = 0;
+        float sum = 0;
+        float X[5] = {0};
+        float supposed_results[5] = {0};
 
-    float backup_matrix[5][6] ={
-        {2*q*pow(10,-4), 1, 6,  9, 10},
-        {2*pow(10, -4),  1, 6,  9, 10},
-        {1,              6, 6,  8, 6},
-        {5,              9, 10, 7, 10},
-        {3,              4, 9,  7, 9,}
-    };
+        //matrix copies
 
-    float supposed_results[5] = {0};
+        float backup_B[5] = {10, 2, 9, 9, 3};
+        float backup_matrix[5][5] ={
+            {2*q*pow(10,-4), 1, 6,  9, 10},
+            {2*pow(10, -4),  1, 6,  9, 10},
+            {1,              6, 6,  8, 6},
+            {5,              9, 10, 7, 10},
+            {3,              4, 9,  7, 9,}
+        };
 
-    //add right side vector to main matrix
-    for(int i = 0; i < 5; i++){
-        A[i][5] = B[i];
-    }
-    //main algorithm
-    for(int i = 0; i < size; i++){
-        for(int j = i + 1; j < size; j++){
-            var = A[j][i] / A[i][i];
-            for(int k = 0; k < size + 1; k++){
-                A[j][k] = A[j][k] - var * A[i][k];
+        //original matrixes
+        float B[5] = {10, 2, 9, 9, 3};
+        float A[5][5] ={
+            {2*q*pow(10,-4), 1, 6,  9, 10},
+            {2*pow(10, -4),  1, 6,  9, 10},
+            {1,              6, 6,  8, 6},
+            {5,              9, 10, 7, 10},
+            {3,              4, 9,  7, 9,}
+        };
+
+        //Gaussian elimination
+
+        //triangle matrix
+        for (int column = 0; column < size - 1; column++) {
+            for (int row = column + 1; row < size; row++) {
+                var = A[row][column] / A[column][column];
+
+                for (int columnToSubtract = column; columnToSubtract < size; columnToSubtract++) {
+                    A[row][columnToSubtract] -= A[column][columnToSubtract] * var;
+                }
+                B[row] -= B[column] * var;
             }
         }
-    }
-    //calculate X vector
-    X[size - 1] = A[size - 1][size] / A[size - 1][size - 1];
-    for(int i = size - 2; i >= 0; i--){
-        X[i] = A[i][size];
-        for(int j = i + 1; j < size; j++){
-            X[i] = X[i] - A[i][j] * X[j];
+
+        //x vector
+        for (int row = size - 1; row >= 0; row--) {
+            X[row] = B[row];
+            for (int column = size - 1; column > row; column--) {
+                X[row] -= A[row][column] * X[column];
+            }
+            X[row] /= A[row][row];
         }
-        X[i] = X[i] / A[i][i];
-    }
-
-    
-    for(int i = 0; i < size; i++){
-        for(int j = 0; j < size; j++){
-            supposed_results[i] += backup_matrix[i][j] * X[j];
+        
+        //calculate results
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                supposed_results[i] += backup_matrix[i][j] * X[j];
+            }
         }
-    }
 
-    cout << "q = " << q << "    " << "wynik = " << endl;
-    for(int i = 0; i < size; i++){
-        cout << supposed_results[i] << "    ";
-    }
-    cout << endl;
+        //o(q)
+        for (int i = 0; i < size; i++){
+            sum += pow(supposed_results[i] - backup_B[i], 2);
+        }
 
-    sum = 0;
-    for (int i = 0; i < size; i++){
-        sum += pow(supposed_results[i] - B[i], 2);
+        //print
+        cout << "q = " << q << "    " << "odchylenie = " <<  sqrt(sum) / size << endl;
     }
-    deviation = sqrt(sum) / size;
-
-    cout << "odchylenie = " << deviation << endl << endl;
     return 0;
 }
