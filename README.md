@@ -1,3 +1,1 @@
 # numerical-calculus
-
-University Course
