@@ -122,8 +122,5 @@ int main(){
     }
     cout << endl;
 
-    //Narysuj wykres wielomianu z uzywajac wektora X i wektora C_results
-    //oblicz wartosc tego wielomianu uzywajac Hornera
-
     return 0;
 }
